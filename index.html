@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Jayotu Capital | India's Trusted Loan Partner</title>
-    <meta name="description" content="Official Loan Partner with India’s Leading Banks & NBFCs. Get Personal & Business Loans at lowest interest rates." />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
     <script>
@@ -18,12 +17,12 @@
             colors: {
               brand: {
                 950: '#020617',
-                900: '#0f172a', // Deep Slate
+                900: '#0f172a',
                 800: '#1e293b',
                 700: '#334155',
-                gold: '#d97706', // Amber 600
+                gold: '#d97706',
                 'gold-light': '#fbbf24',
-                emerald: '#059669', // Emerald 600
+                emerald: '#059669',
               }
             },
             animation: {
@@ -61,68 +60,372 @@
       }
     </script>
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f8fafc;
-        overflow-x: hidden;
-      }
-      .bg-grid-pattern {
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-        background-size: 40px 40px;
-      }
-      .gradient-text {
-        background: linear-gradient(to right, #ffffff, #94a3b8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .gold-gradient {
-        background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%);
-      }
-      .gold-text-gradient {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .glass-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-      .glass-card-dark {
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-      }
+      body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+      .bg-grid-pattern { background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; }
+      .gradient-text { background: linear-gradient(to right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .gold-gradient { background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%); }
+      .gold-text-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+      .glass-card-dark { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f1f1; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body>
+<body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useMemo } from 'https://esm.sh/react@19.2.3';
+        import ReactDOM from 'https://esm.sh/react-dom@19.2.3/client';
+        import { 
+            Menu, X, ShieldCheck, ArrowRight, CheckCircle, User, 
+            Briefcase, Home, RefreshCw, ChevronLeft, 
+            AlertCircle, Lock, Building2, TrendingUp, BadgeCheck, Smartphone, Car,
+            Check, Calculator, PieChart, Star, Shield, TrendingDown, Percent, Clock, Layers, MousePointerClick, FileCheck, FileText, UserCheck, Truck, Coins, Quote, MapPin
+        } from 'https://esm.sh/lucide-react@0.463.0';
+
+        // --- LeadForm Component ---
+        const LeadForm = () => {
+            const initialFormData = {
+                loanType: 'Personal Loan', employmentType: 'Salaried (Private)', incomeRange: 'Above ₹50,000',
+                cibilScore: '750+', loanAmount: '', hasOngoingLoans: 'No', totalMonthlyEmis: '',
+                hasDefaults: 'No', fullName: '', mobile: '', email: '', consent: false
+            };
+            const loanOptions = [
+                { type: 'Personal Loan', rate: '9.97%', icon: User, color: 'text-blue-600', bg: 'bg-blue-50' },
+                { type: 'Home Loan', rate: '7.35%', icon: Home, color: 'text-green-600', bg: 'bg-green-50' },
+                { type: 'Loan Against Property', rate: '9.5%', icon: Building2, color: 'text-purple-600', bg: 'bg-purple-50' },
+                { type: 'Business Loan', rate: '16%', icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50' },
+                { type: 'Car Loan', rate: '8.75%', icon: Car, color: 'text-red-600', bg: 'bg-red-50' },
+            ];
+            const [step, setStep] = useState(1);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [isSuccess, setIsSuccess] = useState(false);
+            const [isRejected, setIsRejected] = useState(false);
+            const [rejectionReason, setRejectionReason] = useState('');
+            const [formData, setFormData] = useState(initialFormData);
+
+            const handleNext = () => {
+                if (step === 2) {
+                    if (formData.cibilScore === 'Below 650' || formData.cibilScore === '650-699') {
+                        setRejectionReason("Currently, we process applications for applicants with a CIBIL score of 700 or above.");
+                        setIsRejected(true); return;
+                    }
+                    if (formData.incomeRange === 'Below ₹20,000') {
+                        setRejectionReason("We currently require a minimum monthly income of ₹20,000 to proceed with bank partners.");
+                        setIsRejected(true); return;
+                    }
+                }
+                if (step === 4 && formData.hasDefaults === 'Yes') {
+                    setRejectionReason("We are unable to process applications with recent payment defaults.");
+                    setIsRejected(true); return;
+                }
+                if (step < 5) setStep(step + 1); else handleSubmit();
+            };
+
+            const handleSubmit = () => {
+                if (!formData.consent) { alert("Please accept the terms to proceed."); return; }
+                setIsSubmitting(true);
+                setTimeout(() => { setIsSubmitting(false); setIsSuccess(true); }, 2000);
+            };
+
+            const updateField = (f, v) => setFormData(p => ({ ...p, [f]: v }));
+
+            if (isRejected) return (
+                <div className="bg-white rounded-2xl shadow-2xl p-8 border-t-4 border-red-500 text-center flex flex-col items-center justify-center animate-fade-in">
+                    <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+                    <h3 className="text-xl font-bold mb-2">We couldn't proceed</h3>
+                    <p className="text-gray-600 mb-6">{rejectionReason}</p>
+                    <button onClick={() => { setIsRejected(false); setStep(1); }} className="text-brand-900 font-semibold underline">Try again</button>
+                </div>
+            );
+
+            if (isSuccess) return (
+                <div className="bg-white rounded-2xl shadow-2xl p-8 border-t-4 border-brand-gold text-center flex flex-col items-center justify-center animate-fade-in">
+                    <CheckCircle className="w-20 h-20 text-green-600 mb-6 animate-bounce" />
+                    <h3 className="text-2xl font-serif font-bold text-brand-900 mb-2">Application Received!</h3>
+                    <p className="text-gray-600 mb-6">Thank you <strong>{formData.fullName}</strong>. Our manager will call you within 15 minutes.</p>
+                    <button onClick={() => { setIsSuccess(false); setStep(1); setFormData(initialFormData); }} className="text-gray-400 text-sm">Start New Application</button>
+                </div>
+            );
+
+            return (
+                <div id="lead-form" className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col min-h-[500px]">
+                    <div className="bg-brand-950 p-4 text-white flex justify-between items-center">
+                        <div className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-brand-gold" /><span className="text-sm font-semibold">Eligibility Check</span></div>
+                        <span className="text-xs text-gray-400">Step {step} of 5</span>
+                    </div>
+                    <div className="p-6 flex-1">
+                        <div className="w-full bg-gray-100 h-2 rounded-full mb-8 overflow-hidden">
+                            <div className="bg-brand-gold h-full transition-all" style={{ width: `${(step / 5) * 100}%` }}></div>
+                        </div>
+                        {step === 1 && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Select Loan Requirement</h3>
+                                <div className="grid grid-cols-1 gap-3">
+                                    {loanOptions.map(o => (
+                                        <button key={o.type} onClick={() => { updateField('loanType', o.type); setStep(2); }} className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all ${formData.loanType === o.type ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-100 bg-white'}`}>
+                                            <div className="flex items-center gap-4">
+                                                <div className={`p-3 rounded-full ${o.bg} ${o.color}`}><o.icon size={24} /></div>
+                                                <div><span className="block font-bold text-lg">{o.type}</span><span className="text-xs font-semibold text-gray-500">Starting @ <span className="text-brand-gold">{o.rate}</span></span></div>
+                                            </div>
+                                            <ArrowRight size={20} className="text-gray-300" />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {step === 2 && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Basic Details</h3>
+                                <div className="space-y-6">
+                                    <div><label className="block text-sm font-bold mb-2">Employment</label><select value={formData.employmentType} onChange={e => updateField('employmentType', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg"><option>Salaried (Private)</option><option>Salaried (Govt)</option><option>Self-Employed Business</option></select></div>
+                                    <div><label className="block text-sm font-bold mb-2">Monthly Income</label><div className="grid grid-cols-2 gap-3">{['Above ₹50,000', '₹30,000 - ₹50,000', '₹20,000 - ₹30,000', 'Below ₹20,000'].map(r => <button key={r} onClick={() => updateField('incomeRange', r)} className={`py-2 px-3 text-sm rounded-lg border ${formData.incomeRange === r ? 'bg-brand-900 text-white' : 'bg-white text-gray-600'}`}>{r}</button>)}</div></div>
+                                    <div><label className="block text-sm font-bold mb-2">CIBIL Score</label><div className="grid grid-cols-4 gap-2">{['750+', '700-749', '650-699', 'Below 650'].map(s => <button key={s} onClick={() => updateField('cibilScore', s)} className={`py-2 px-1 text-xs rounded-lg border ${formData.cibilScore === s ? 'bg-brand-gold text-white' : 'bg-white text-gray-600'}`}>{s}</button>)}</div></div>
+                                </div>
+                            </div>
+                        )}
+                        {step === 3 && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">{formData.loanType} Details</h3>
+                                <div className="space-y-4">
+                                    <div><label className="block text-xs font-bold text-gray-500 mb-1">Loan Amount</label><input type="number" value={formData.loanAmount} onChange={e => updateField('loanAmount', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg" /></div>
+                                    <div><label className="block text-xs font-bold text-gray-500 mb-1">Full Name</label><input type="text" value={formData.fullName} onChange={e => updateField('fullName', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg" /></div>
+                                </div>
+                            </div>
+                        )}
+                        {step === 4 && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Financial Health</h3>
+                                <div className="space-y-6">
+                                    <div><label className="block text-sm font-bold mb-3">Ongoing Loans?</label><div className="flex gap-4">{['Yes', 'No'].map(o => <button key={o} onClick={() => updateField('hasOngoingLoans', o)} className={`flex-1 py-3 rounded-lg border font-semibold ${formData.hasOngoingLoans === o ? 'bg-brand-900 text-white' : 'bg-white text-gray-600'}`}>{o}</button>)}</div></div>
+                                    <div><label className="block text-sm font-bold mb-3">Defaults in 2 years?</label><div className="flex gap-4">{['Yes', 'No'].map(o => <button key={o} onClick={() => updateField('hasDefaults', o)} className={`flex-1 py-3 rounded-lg border font-semibold ${formData.hasDefaults === o ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-700'}`}>{o}</button>)}</div></div>
+                                </div>
+                            </div>
+                        )}
+                        {step === 5 && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Contact Info</h3>
+                                <div className="space-y-4">
+                                    <div><label className="block text-xs font-bold text-gray-500 mb-1">Mobile</label><input type="tel" maxLength={10} value={formData.mobile} onChange={e => updateField('mobile', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg" /></div>
+                                    <div><label className="block text-xs font-bold text-gray-500 mb-1">Email</label><input type="email" value={formData.email} onChange={e => updateField('email', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg" /></div>
+                                    <div className="flex items-start gap-3 mt-4 bg-gray-50 p-3 rounded-lg"><input type="checkbox" checked={formData.consent} onChange={e => updateField('consent', e.target.checked)} /><label className="text-xs text-gray-500">I authorize Jayotu Capital to contact me via Call/SMS/WhatsApp.</label></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="p-6 bg-gray-50 border-t flex justify-between items-center">
+                        {step > 1 ? <button onClick={() => setStep(step - 1)} className="text-gray-500 font-semibold flex items-center gap-1"><ChevronLeft size={18} /> Back</button> : <div></div>}
+                        <button onClick={handleNext} disabled={isSubmitting || (step === 5 && !formData.consent)} className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg ${isSubmitting || (step === 5 && !formData.consent) ? 'bg-gray-400' : 'bg-brand-900'}`}>{isSubmitting ? 'Processing...' : step === 5 ? 'Check Offers' : 'Next'}</button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Navbar Component ---
+        const Navbar = () => {
+            const [isScrolled, setIsScrolled] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            useEffect(() => {
+                const h = () => setIsScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', h); return () => window.removeEventListener('scroll', h);
+            }, []);
+            return (
+                <nav className={`fixed w-full z-50 transition-all ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
+                    <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+                        <div className="flex items-center space-x-2"><div className="bg-brand-900 p-2 rounded-lg"><ShieldCheck className="w-6 h-6 text-white" /></div><span className={`text-2xl font-bold font-serif ${isScrolled ? 'text-brand-900' : 'text-brand-900 lg:text-white'}`}>Jayotu Capital</span></div>
+                        <div className="hidden md:flex items-center space-x-8">
+                            {['Services', 'Partners', 'Process', 'Reviews'].map(i => <a key={i} href={`#${i.toLowerCase()}`} className={`text-sm font-medium hover:text-brand-gold ${isScrolled ? 'text-gray-700' : 'text-gray-200'}`}>{i}</a>)}
+                            <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="bg-brand-gold text-white px-6 py-2.5 rounded-full font-semibold text-sm">Check Eligibility</button>
+                        </div>
+                        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`md:hidden ${isScrolled ? 'text-gray-800' : 'text-white'}`}>{mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}</button>
+                    </div>
+                </nav>
+            );
+        };
+
+        // --- Hero Component ---
+        const Hero = () => (
+            <section className="relative w-full min-h-screen bg-brand-950 pt-28 pb-16 overflow-hidden flex items-center">
+                <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+                <div className="max-w-7xl mx-auto px-4 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div className="lg:col-span-7 text-center lg:text-left space-y-8 animate-fade-in-up">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-brand-gold-light text-sm font-semibold"><Star size={16} fill="currentColor" /><span>#1 Trusted DSA Partner in India</span></div>
+                        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-white leading-tight">Instant Loans from <br /><span className="gold-text-gradient">India’s Top Banks</span></h1>
+                        <p className="text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0">Unlock the best financial deals. Personal & Business Loans @ <span className="text-brand-gold-light font-bold text-2xl">10.25%*</span></p>
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                            {['Disbursal in 24 Hrs', 'Lowest Rates', '100% Secure'].map(f => <div key={f} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/5 text-gray-200 text-sm"><CheckCircle2 className="text-emerald-400" size={16} />{f}</div>)}
+                        </div>
+                    </div>
+                    <div className="lg:col-span-5"><LeadForm /></div>
+                </div>
+            </section>
+        );
+
+        const CheckCircle2 = ({ className, size }) => <CheckCircle className={className} size={size} />;
+
+        // --- TrustStrip Component ---
+        const TrustStrip = () => {
+            const banks = [{ n: "HDFC", d: "hdfcbank.com" }, { n: "ICICI", d: "icicibank.com" }, { n: "SBI", d: "sbi.co.in" }, { n: "Axis", d: "axisbank.com" }, { n: "Bajaj", d: "bajajfinserv.in" }, { n: "Tata", d: "tatacapital.com" }, { n: "Kotak", d: "kotak.com" }];
+            return (
+                <section id="partners" className="py-12 bg-white border-b overflow-hidden">
+                    <p className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Our Direct Banking Partners</p>
+                    <div className="flex animate-marquee whitespace-nowrap items-center">
+                        {[...banks, ...banks].map((b, i) => (
+                            <div key={i} className="mx-12 flex h-16 w-32 items-center justify-center grayscale hover:grayscale-0 transition-all">
+                                <img src={`https://logo.clearbit.com/${b.d}?size=160`} alt={b.n} className="max-h-12 opacity-50 hover:opacity-100" />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- Features Component ---
+        const Features = () => {
+            const f = [
+                { i: MousePointerClick, t: "100% Digital", d: "No physical branch visits." },
+                { i: Layers, t: "Compare 20+ Banks", d: "We find your perfect match." },
+                { i: Percent, t: "Lowest Rates", d: "Starting from 10.25%." },
+                { i: ShieldCheck, t: "Zero Hidden Charges", d: "Transparent processing fees." },
+                { i: Clock, t: "Quick Disbursal", d: "Credited within 24-48 hours." },
+                { i: FileCheck, t: "High Approval", d: "AI-match system for right bank." }
+            ];
+            return (
+                <section id="services" className="py-24 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 text-center mb-16">
+                        <span className="text-brand-gold font-bold text-xs uppercase mb-2 block">Why Choose Us</span>
+                        <h2 className="text-4xl font-serif font-bold text-brand-900 mb-4">Smart Financing for Smart Indians</h2>
+                    </div>
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {f.map((item, i) => (
+                            <div key={i} className="p-8 rounded-2xl border border-gray-100 shadow-lg hover:-translate-y-2 transition-all">
+                                <div className="w-16 h-16 rounded-xl bg-gray-50 flex items-center justify-center mb-6"><item.i className="w-8 h-8 text-brand-900" /></div>
+                                <h3 className="text-xl font-bold text-brand-900 mb-3">{item.t}</h3>
+                                <p className="text-gray-600">{item.d}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- LoanProducts Component ---
+        const LoanProducts = () => {
+            const p = [
+                { t: "Personal Loan", i: User, a: "Up to ₹40L", r: "From 10.25%", c: "bg-blue-50" },
+                { t: "Business Loan", i: Briefcase, a: "Up to ₹5Cr", r: "From 15%", c: "bg-amber-50" },
+                { t: "MSME Loan", i: TrendingUp, a: "Up to ₹2Cr", r: "Competitive", c: "bg-emerald-50" },
+                { t: "LAP", i: Home, a: "Up to ₹10Cr", r: "From 8.50%", c: "bg-indigo-50" }
+            ];
+            return (
+                <section className="py-20 bg-gray-50" id="products">
+                    <div className="max-w-7xl mx-auto px-4 text-center mb-12">
+                        <h2 className="text-3xl font-serif font-bold text-brand-900">Choose the Right Loan</h2>
+                    </div>
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
+                        {p.map((item, i) => (
+                            <div key={i} className="bg-white rounded-2xl p-6 shadow-md border-t-4 border-brand-900">
+                                <div className={`w-12 h-12 rounded-lg ${item.c} flex items-center justify-center mb-6`}><item.i className="w-6 h-6 text-brand-900" /></div>
+                                <h3 className="text-xl font-bold mb-2">{item.t}</h3>
+                                <p className="text-2xl font-bold text-brand-gold">{item.a}</p>
+                                <p className="text-sm text-gray-500 mb-8">{item.r}</p>
+                                <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="w-full py-3 border border-brand-900 text-brand-900 font-semibold rounded-lg hover:bg-brand-900 hover:text-white transition-colors">Apply Now</button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- ProcessStep Component ---
+        const ProcessStep = () => {
+            const s = [
+                { n: "01", i: FileText, t: "Eligibility", d: "Fill the simple form." },
+                { n: "02", i: UserCheck, t: "Bank Offers", d: "We fetch best quotes." },
+                { n: "03", i: Truck, t: "KYC", d: "Digital or doorstep pickup." },
+                { n: "04", i: Coins, t: "Disbursed", d: "Direct credit to account." }
+            ];
+            return (
+                <section id="process" className="py-24 bg-gray-50">
+                    <div className="max-w-7xl mx-auto px-4 text-center mb-20"><h2 className="text-4xl font-serif font-bold text-brand-900">Hassle-Free 4 Step Process</h2></div>
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+                        {s.map((step, i) => (
+                            <div key={i} className="flex flex-col items-center text-center">
+                                <div className="w-20 h-20 rounded-full bg-white shadow-xl flex items-center justify-center mb-8 relative">
+                                    <step.i className="w-8 h-8 text-brand-900" />
+                                    <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-brand-900 text-white flex items-center justify-center text-sm font-bold">{step.n}</div>
+                                </div>
+                                <h3 className="text-xl font-bold text-brand-900 mb-3">{step.t}</h3>
+                                <p className="text-sm text-gray-500">{step.d}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- Testimonials Component ---
+        const Testimonials = () => {
+            const r = [
+                { n: "Amit Sharma", l: "Delhi", t: "Jayotu Capital got me an offer from HDFC within 4 hours. Smooth process.", i: "https://picsum.photos/id/1012/100/100" },
+                { n: "Pooja Verma", l: "Mumbai", t: "Transparent comparison of 3 banks. I chose ICICI for 10.5%.", i: "https://picsum.photos/id/338/100/100" }
+            ];
+            return (
+                <section id="reviews" className="py-24 bg-brand-900 relative">
+                    <div className="max-w-7xl mx-auto px-4 text-center mb-16"><h2 className="text-3xl md:text-5xl font-serif font-bold text-white">Stories of Success</h2></div>
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {r.map((rev, i) => (
+                            <div key={i} className="glass-card-dark rounded-2xl p-8">
+                                <Quote className="text-brand-gold/20 w-12 h-12 mb-4" />
+                                <p className="text-gray-300 italic mb-8">"{rev.t}"</p>
+                                <div className="flex items-center gap-4 pt-6 border-t border-white/10">
+                                    <img src={rev.i} className="w-12 h-12 rounded-full" />
+                                    <div><h4 className="font-bold text-white">{rev.n}</h4><div className="text-xs text-gray-400">{rev.l}</div></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- Footer Component ---
+        const Footer = () => (
+            <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+                <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                    <div className="col-span-1"><div className="flex items-center gap-2 mb-4 text-white"><Shield className="w-6 h-6" /><span className="text-xl font-bold font-serif">Jayotu Capital</span></div><p className="text-sm">India's premium financial bridge connecting borrowers with leading banks.</p></div>
+                    <div><h4 className="text-white font-bold mb-4">Products</h4><ul className="space-y-2 text-sm"><li>Personal Loan</li><li>Business Loan</li></ul></div>
+                    <div><h4 className="text-white font-bold mb-4">Legal</h4><ul className="space-y-2 text-sm"><li>Privacy Policy</li><li>Terms of Use</li></ul></div>
+                    <div><h4 className="text-white font-bold mb-4">Contact</h4><ul className="space-y-2 text-sm"><li>support@jayotucapital.in</li><li>+91 22 4567 8900</li></ul></div>
+                </div>
+                <div className="max-w-7xl mx-auto px-4 border-t border-gray-800 pt-8 text-xs text-center">
+                    <p>&copy; {new Date().getFullYear()} Jayotu Capital. All Rights Reserved.</p>
+                </div>
+            </footer>
+        );
+
+        // --- App Component ---
+        const App = () => (
+            <div className="min-h-screen bg-white">
+                <Navbar />
+                <Hero />
+                <TrustStrip />
+                <Features />
+                <LoanProducts />
+                <ProcessStep />
+                <Testimonials />
+                <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t p-4 z-40 shadow-lg">
+                    <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="w-full bg-brand-gold text-white font-bold py-3 rounded-lg animate-pulse">Check Loan Eligibility</button>
+                </div>
+                <Footer />
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
