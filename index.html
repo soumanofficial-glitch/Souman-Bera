@@ -125,10 +125,31 @@
                 if (step < 5) setStep(step + 1); else handleSubmit();
             };
 
-            const handleSubmit = () => {
+            const handleSubmit = async () => {
                 if (!formData.consent) { alert("Please accept the terms to proceed."); return; }
                 setIsSubmitting(true);
-                setTimeout(() => { setIsSubmitting(false); setIsSuccess(true); }, 2000);
+                try {
+                    const response = await fetch('/api/leads', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...formData,
+                            submittedAt: new Date().toISOString(),
+                            source: window.location.href
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        setIsSuccess(true);
+                    } else {
+                        throw new Error('Failed to submit form');
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    alert("There was an error submitting your request. Please try again later.");
+                } finally {
+                    setIsSubmitting(false);
+                }
             };
 
             const updateField = (f, v) => setFormData(p => ({ ...p, [f]: v }));
