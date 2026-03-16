@@ -128,26 +128,51 @@
             const handleSubmit = async () => {
                 if (!formData.consent) { alert("Please accept the terms to proceed."); return; }
                 setIsSubmitting(true);
+                
                 try {
-                    const response = await fetch('/api/leads', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ...formData,
-                            submittedAt: new Date().toISOString(),
-                            source: window.location.href
-                        })
-                    });
+                    // Prepare data for Google Sheets
+                    const submissionData = {
+                        ...formData,
+                        timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                        source: window.location.href
+                    };
+
+                    // Using a hidden form submission is the most reliable way to send data to Google Apps Script
+                    // as it bypasses CORS issues entirely and works with standard 'doPost(e)' e.parameter logic.
+                    const scriptURL = 'https://script.google.com/macros/s/AKfycbzA-OQhhOCa3eEB3QXY3xJ6i3IMmzqHdkqMCQ8ws9T7W_FATpcwUDf--3dS3lv9o0CQ/exec';
                     
-                    if (response.ok) {
+                    const iframe = document.createElement('iframe');
+                    iframe.name = 'hidden_iframe';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = scriptURL;
+                    form.target = 'hidden_iframe';
+
+                    Object.keys(submissionData).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = submissionData[key];
+                        form.appendChild(input);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit();
+
+                    // Give it a moment to submit before showing success
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                        setIsSubmitting(false);
                         setIsSuccess(true);
-                    } else {
-                        throw new Error('Failed to submit form');
-                    }
+                    }, 1500);
+
                 } catch (error) {
-                    console.error('Submission error:', error);
-                    alert("There was an error submitting your request. Please try again later.");
-                } finally {
+                    console.error("Submission error:", error);
+                    alert("There was an error submitting your application. Please try again or contact support.");
                     setIsSubmitting(false);
                 }
             };
