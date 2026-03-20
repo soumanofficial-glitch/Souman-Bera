@@ -99,7 +99,7 @@
                 { type: 'Personal Loan', rate: '9.97%', icon: User, color: 'text-blue-600', bg: 'bg-blue-50' },
                 { type: 'Home Loan', rate: '7.35%', icon: Home, color: 'text-green-600', bg: 'bg-green-50' },
                 { type: 'Loan Against Property', rate: '9.5%', icon: Building2, color: 'text-purple-600', bg: 'bg-purple-50' },
-                { type: 'Business Loan', rate: '16%', icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50' },
+                { type: 'Business Loan', rate: '9.97%', icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50' },
                 { type: 'Car Loan', rate: '8.75%', icon: Car, color: 'text-red-600', bg: 'bg-red-50' },
             ];
             const [step, setStep] = useState(1);
@@ -110,20 +110,50 @@
             const [formData, setFormData] = useState(initialFormData);
 
             const handleNext = () => {
+                // Validation for each step (Compulsory fields)
+                if (step === 1 && !formData.loanType) {
+                    alert("Please select a loan type."); return;
+                }
                 if (step === 2) {
+                    if (!formData.employmentType || !formData.incomeRange || !formData.cibilScore) {
+                        alert("Please fill all fields."); return;
+                    }
                     if (formData.cibilScore === 'Below 650' || formData.cibilScore === '650-699') {
                         setRejectionReason("Currently, we process applications for applicants with a CIBIL score of 700 or above.");
                         setIsRejected(true); return;
                     }
-                    if (formData.incomeRange === 'Below ₹20,000') {
-                        setRejectionReason("We currently require a minimum monthly income of ₹20,000 to proceed with bank partners.");
+                    if (formData.incomeRange === 'Below ₹25,000') {
+                        setRejectionReason("We currently require a minimum monthly income of ₹25,000 to proceed with bank partners.");
                         setIsRejected(true); return;
                     }
                 }
-                if (step === 4 && formData.hasDefaults === 'Yes') {
-                    setRejectionReason("We are unable to process applications with recent payment defaults.");
-                    setIsRejected(true); return;
+                if (step === 3) {
+                    if (!formData.loanAmount || !formData.fullName) {
+                        alert("Please fill all fields."); return;
+                    }
+                    if (parseInt(formData.loanAmount) < 150000) {
+                        setRejectionReason("Minimum loan requirement is ₹1.5 Lakhs (₹1,50,000).");
+                        setIsRejected(true); return;
+                    }
                 }
+                if (step === 4) {
+                    if (!formData.hasOngoingLoans || !formData.hasDefaults) {
+                        alert("Please fill all fields."); return;
+                    }
+                    if (formData.hasDefaults === 'Yes') {
+                        setRejectionReason("We are unable to process applications with recent payment defaults.");
+                        setIsRejected(true); return;
+                    }
+                }
+                if (step === 5) {
+                    if (!formData.mobile || !formData.email) {
+                        alert("Please fill all fields."); return;
+                    }
+                    if (formData.mobile.length !== 10) {
+                        alert("Please enter a valid 10-digit mobile number."); return;
+                    }
+                }
+
                 if (step < 5) setStep(step + 1); else handleSubmit();
             };
 
@@ -182,7 +212,6 @@
                     <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
                     <h3 className="text-xl font-bold mb-2">We couldn't proceed</h3>
                     <p className="text-gray-600 mb-6">{rejectionReason}</p>
-                    <button onClick={() => { setIsRejected(false); setStep(1); }} className="text-brand-900 font-semibold underline">Try again</button>
                 </div>
             );
 
@@ -226,7 +255,7 @@
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Basic Details</h3>
                                 <div className="space-y-6">
                                     <div><label className="block text-sm font-bold mb-2">Employment</label><select value={formData.employmentType} onChange={e => updateField('employmentType', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-brand-gold outline-none"><option>Salaried (Private)</option><option>Salaried (Govt)</option><option>Self-Employed Business</option></select></div>
-                                    <div><label className="block text-sm font-bold mb-2">Monthly Income</label><div className="grid grid-cols-2 gap-3">{['Above ₹50,000', '₹30,000 - ₹50,000', '₹20,000 - ₹30,000', 'Below ₹20,000'].map(r => <button key={r} onClick={() => updateField('incomeRange', r)} className={`py-2 px-3 text-sm rounded-lg border transition-all ${formData.incomeRange === r ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-900'}`}>{r}</button>)}</div></div>
+                                    <div><label className="block text-sm font-bold mb-2">Monthly Income</label><div className="grid grid-cols-2 gap-3">{['Above ₹50,000', '₹35,000 - ₹50,000', '₹25,000 - ₹35,000', 'Below ₹25,000'].map(r => <button key={r} onClick={() => updateField('incomeRange', r)} className={`py-2 px-3 text-sm rounded-lg border transition-all ${formData.incomeRange === r ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-900'}`}>{r}</button>)}</div></div>
                                     <div><label className="block text-sm font-bold mb-2">CIBIL Score</label><div className="grid grid-cols-4 gap-2">{['750+', '700-749', '650-699', 'Below 650'].map(s => <button key={s} onClick={() => updateField('cibilScore', s)} className={`py-2 px-1 text-xs rounded-lg border transition-all ${formData.cibilScore === s ? 'bg-brand-gold text-white border-brand-gold' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-gold'}`}>{s}</button>)}</div></div>
                                 </div>
                             </div>
@@ -235,7 +264,7 @@
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">{formData.loanType} Details</h3>
                                 <div className="space-y-4">
-                                    <div><label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Loan Amount Required</label><input type="number" placeholder="e.g. 500000" value={formData.loanAmount} onChange={e => updateField('loanAmount', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-brand-gold outline-none" /></div>
+                                    <div><label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Loan Amount Required (Min ₹1.5L)</label><input type="number" placeholder="e.g. 500000" min="150000" value={formData.loanAmount} onChange={e => updateField('loanAmount', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-brand-gold outline-none" /></div>
                                     <div><label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Full Name (As per PAN)</label><input type="text" placeholder="Your Name" value={formData.fullName} onChange={e => updateField('fullName', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-brand-gold outline-none" /></div>
                                 </div>
                             </div>
@@ -309,10 +338,22 @@
                 <div className="max-w-7xl mx-auto px-4 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                     <div className="lg:col-span-7 text-center lg:text-left space-y-8 animate-fade-in-up">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-brand-gold-light text-sm font-semibold"><Star size={16} fill="currentColor" /><span>#1 Trusted DSA Partner in India</span></div>
-                        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-white leading-tight">Instant Loans from <br /><span className="gold-text-gradient">India’s Top Banks</span></h1>
-                        <p className="text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">Unlock the best financial deals with Jayotu Capital. We bridge the gap between you and India's leading financial institutions. Personal & Business Loans @ <span className="text-brand-gold-light font-bold text-2xl">10.25%*</span></p>
+                        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-white leading-tight">Instant Loans from <br /><span className="gold-text-gradient">India’s Top Banks and NBFC's</span></h1>
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-6 text-sm font-bold tracking-wide uppercase">
+                            <div className="flex items-center gap-2 text-brand-gold-light">
+                                <span className="text-gray-400 font-medium normal-case">Min. Salary:</span> ₹25,000
+                            </div>
+                            <div className="hidden lg:block w-px h-4 bg-white/10"></div>
+                            <div className="flex items-center gap-2 text-brand-gold-light">
+                                <span className="text-gray-400 font-medium normal-case">Min. Loan:</span> ₹1.5 Lakh
+                            </div>
+                        </div>
+                        <p className="text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">Unlock the best financial deals with Jayotu Capital. We bridge the gap between you and India's leading financial institutions. Personal & Business Loans @ <span className="text-brand-gold-light font-bold text-2xl">9.97%*</span></p>
                         <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                             {['Disbursal in 24 Hrs', 'Lowest Rates', '100% Secure'].map(f => <div key={f} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/5 text-gray-200 text-sm"><CheckCircle className="text-emerald-400" size={16} />{f}</div>)}
+                        </div>
+                        <div className="pt-4">
+                            <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="bg-brand-gold hover:bg-brand-gold/90 text-white px-10 py-4 rounded-full font-bold text-lg shadow-2xl shadow-brand-gold/20 transition-all transform hover:scale-105 active:scale-95">Get Started Now</button>
                         </div>
                     </div>
                     <div className="lg:col-span-5"><LeadForm /></div>
@@ -322,14 +363,17 @@
 
         // --- TrustStrip Component ---
         const TrustStrip = () => {
-            const banks = [{ n: "HDFC", d: "hdfcbank.com" }, { n: "ICICI", d: "icicibank.com" }, { n: "SBI", d: "sbi.co.in" }, { n: "Axis", d: "axisbank.com" }, { n: "Bajaj", d: "bajajfinserv.in" }, { n: "Tata", d: "tatacapital.com" }, { n: "Kotak", d: "kotak.com" }];
+            const partners = [
+                "HDFC Bank", "ICICI Bank", "SBI", "Axis Bank", "Kotak Mahindra", "IDFC First", "Yes Bank", "IndusInd Bank",
+                "Bajaj Finserv", "Tata Capital", "L&T Finance", "Aditya Birla Capital", "Muthoot Finance", "Cholamandalam", "Mahindra Finance", "Shriram Finance"
+            ];
             return (
                 <section id="partners" className="py-12 bg-white border-b overflow-hidden">
-                    <p className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Our Direct Banking Partners</p>
+                    <p className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Our Direct Banking and NBFC Partners</p>
                     <div className="flex animate-marquee whitespace-nowrap items-center">
-                        {[...banks, ...banks].map((b, i) => (
-                            <div key={i} className="mx-12 flex h-16 w-32 items-center justify-center grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
-                                <img src={`https://logo.clearbit.com/${b.d}?size=160`} alt={b.n} className="max-h-12" referrerPolicy="no-referrer" />
+                        {[...partners, ...partners].map((p, i) => (
+                            <div key={i} className="mx-12 flex h-16 items-center justify-center transition-all opacity-60 hover:opacity-100">
+                                <span className="text-xl font-bold text-brand-900 font-serif tracking-tight">{p}</span>
                             </div>
                         ))}
                     </div>
@@ -370,17 +414,51 @@
         // --- LoanProducts Component ---
         const LoanProducts = () => {
             const p = [
-                { t: "Personal Loan", i: User, a: "Up to ₹40L", r: "From 10.25%", c: "bg-blue-50" },
-                { t: "Business Loan", i: Briefcase, a: "Up to ₹5Cr", r: "From 15%", c: "bg-amber-50" },
+                { t: "Personal Loan", i: User, a: "Up to ₹40L", r: "From 9.97%", c: "bg-blue-50" },
+                { t: "Business Loan", i: Briefcase, a: "Up to ₹5Cr", r: "From 9.97%", c: "bg-amber-50" },
                 { t: "MSME Loan", i: TrendingUp, a: "Up to ₹2Cr", r: "Competitive", c: "bg-emerald-50" },
                 { t: "LAP", i: Home, a: "Up to ₹10Cr", r: "From 8.50%", c: "bg-indigo-50" }
             ];
+
+            // EMI Calculator State
+            const [calcType, setCalcType] = useState('personal');
+            const [amount, setAmount] = useState(500000);
+            const [rate, setRate] = useState(9.97);
+            const [years, setYears] = useState(3);
+
+            useEffect(() => {
+                if (calcType === 'personal') {
+                    setAmount(500000);
+                    setRate(9.97);
+                    setYears(3);
+                } else {
+                    setAmount(3000000);
+                    setRate(7.35);
+                    setYears(20);
+                }
+            }, [calcType]);
+
+            const monthlyRate = rate / 12 / 100;
+            const months = years * 12;
+            const emi = (amount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            const totalAmount = emi * months;
+            const totalInterest = totalAmount - amount;
+
+            const formatCurrency = (val) => {
+                return new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    maximumFractionDigits: 0
+                }).format(val);
+            };
+
             return (
                 <section className="py-20 bg-gray-50" id="products">
                     <div className="max-w-7xl mx-auto px-4 text-center mb-12">
-                        <h2 className="text-3xl font-serif font-bold text-brand-900">Choose the Right Loan</h2>
+                        <span className="text-brand-gold font-bold text-xs uppercase mb-2 block tracking-widest">Financial Solutions</span>
+                        <h2 className="text-4xl font-serif font-bold text-brand-900">Choose the Right Loan</h2>
                     </div>
-                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
                         {p.map((item, i) => (
                             <div key={i} className="bg-white rounded-2xl p-6 shadow-md border-t-4 border-brand-900 hover:shadow-xl transition-all">
                                 <div className={`w-12 h-12 rounded-lg ${item.c} flex items-center justify-center mb-6`}><item.i className="w-6 h-6 text-brand-900" /></div>
@@ -390,6 +468,127 @@
                                 <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="w-full py-3 border border-brand-900 text-brand-900 font-semibold rounded-lg hover:bg-brand-900 hover:text-white transition-all">Apply Now</button>
                             </div>
                         ))}
+                    </div>
+
+                    {/* EMI Calculator Section */}
+                    <div className="max-w-5xl mx-auto px-4">
+                        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+                            <div className="bg-brand-900 p-8 text-white flex flex-col md:flex-row justify-between items-center gap-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-brand-gold/20 p-3 rounded-2xl">
+                                        <Calculator className="w-8 h-8 text-brand-gold-light" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-serif font-bold">EMI Calculator</h3>
+                                        <p className="text-gray-400 text-sm">Plan your monthly budget easily</p>
+                                    </div>
+                                </div>
+                                <div className="flex bg-white/10 p-1 rounded-xl">
+                                    <button 
+                                        onClick={() => setCalcType('personal')}
+                                        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${calcType === 'personal' ? 'bg-brand-gold text-white shadow-lg' : 'text-gray-300 hover:text-white'}`}
+                                    >Personal Loan</button>
+                                    <button 
+                                        onClick={() => setCalcType('home')}
+                                        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${calcType === 'home' ? 'bg-brand-gold text-white shadow-lg' : 'text-gray-300 hover:text-white'}`}
+                                    >Home Loan</button>
+                                </div>
+                            </div>
+
+                            <div className="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                <div className="space-y-10">
+                                    {/* Amount Slider */}
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-gray-700 font-bold">Loan Amount</label>
+                                            <span className="text-brand-900 font-extrabold text-lg bg-gray-100 px-4 py-1 rounded-lg">{formatCurrency(amount)}</span>
+                                        </div>
+                                        <input 
+                                            type="range" 
+                                            min={calcType === 'personal' ? 50000 : 500000} 
+                                            max={calcType === 'personal' ? 5000000 : 100000000} 
+                                            step={calcType === 'personal' ? 10000 : 100000}
+                                            value={amount}
+                                            onChange={(e) => setAmount(Number(e.target.value))}
+                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-gold"
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-400 font-bold">
+                                            <span>{formatCurrency(calcType === 'personal' ? 50000 : 500000)}</span>
+                                            <span>{formatCurrency(calcType === 'personal' ? 5000000 : 100000000)}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Interest Rate Slider */}
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-gray-700 font-bold">Interest Rate (% p.a.)</label>
+                                            <span className="text-brand-900 font-extrabold text-lg bg-gray-100 px-4 py-1 rounded-lg">{rate}%</span>
+                                        </div>
+                                        <input 
+                                            type="range" 
+                                            min={7} 
+                                            max={24} 
+                                            step={0.05}
+                                            value={rate}
+                                            onChange={(e) => setRate(Number(e.target.value))}
+                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-gold"
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-400 font-bold">
+                                            <span>7%</span>
+                                            <span>24%</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Tenure Slider */}
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-gray-700 font-bold">Tenure (Years)</label>
+                                            <span className="text-brand-900 font-extrabold text-lg bg-gray-100 px-4 py-1 rounded-lg">{years} Years</span>
+                                        </div>
+                                        <input 
+                                            type="range" 
+                                            min={1} 
+                                            max={calcType === 'personal' ? 7 : 30} 
+                                            step={1}
+                                            value={years}
+                                            onChange={(e) => setYears(Number(e.target.value))}
+                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-gold"
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-400 font-bold">
+                                            <span>1 Year</span>
+                                            <span>{calcType === 'personal' ? 7 : 30} Years</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 flex flex-col justify-between">
+                                    <div className="text-center space-y-2 mb-8">
+                                        <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">Monthly EMI</p>
+                                        <p className="text-5xl font-serif font-bold text-brand-900">{formatCurrency(Math.round(emi))}</p>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                                            <span className="text-gray-600 flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-brand-900"></div> Principal Amount</span>
+                                            <span className="font-bold text-gray-900">{formatCurrency(amount)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                                            <span className="text-gray-600 flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-brand-gold"></div> Total Interest</span>
+                                            <span className="font-bold text-gray-900">{formatCurrency(Math.round(totalInterest))}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-4">
+                                            <span className="text-gray-900 font-bold">Total Payable</span>
+                                            <span className="font-extrabold text-xl text-brand-900">{formatCurrency(Math.round(totalAmount))}</span>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+                                        className="w-full mt-8 bg-brand-gold hover:bg-brand-gold/90 text-white py-4 rounded-xl font-bold shadow-xl shadow-brand-gold/20 transition-all flex items-center justify-center gap-2 group"
+                                    >
+                                        Check Eligibility for {formatCurrency(amount)} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             );
@@ -462,10 +661,10 @@
                     <div>
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Products</h4>
                         <ul className="space-y-3 text-sm">
-                            <li className="hover:text-white cursor-pointer transition-colors">Personal Loan</li>
-                            <li className="hover:text-white cursor-pointer transition-colors">Business Loan</li>
-                            <li className="hover:text-white cursor-pointer transition-colors">MSME Loan</li>
-                            <li className="hover:text-white cursor-pointer transition-colors">Loan Against Property</li>
+                            <li onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white cursor-pointer transition-colors">Personal Loan</li>
+                            <li onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white cursor-pointer transition-colors">Business Loan</li>
+                            <li onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white cursor-pointer transition-colors">MSME Loan</li>
+                            <li onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white cursor-pointer transition-colors">Loan Against Property</li>
                         </ul>
                     </div>
                     <div>
@@ -479,9 +678,8 @@
                     <div>
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Contact</h4>
                         <ul className="space-y-4 text-sm">
-                            <li className="flex items-center gap-3"><MapPin size={18} className="text-brand-gold" /> Mumbai, Maharashtra, India</li>
+                            <li className="flex items-center gap-3"><MapPin size={18} className="text-brand-gold" /> Dalhousie, Kolkata 700001</li>
                             <li className="flex items-center gap-3"><FileText size={18} className="text-brand-gold" /> support@jayotucapital.in</li>
-                            <li className="flex items-center gap-3"><Smartphone size={18} className="text-brand-gold" /> +91 22 4567 8900</li>
                         </ul>
                     </div>
                 </div>
