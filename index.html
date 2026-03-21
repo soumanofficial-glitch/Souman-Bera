@@ -88,6 +88,16 @@
             Check, Calculator, PieChart, Star, Shield, TrendingDown, Percent, Clock, Layers, MousePointerClick, FileCheck, FileText, UserCheck, Truck, Coins, Quote, MapPin
         } from 'https://esm.sh/lucide-react@0.463.0';
 
+        // --- TopBanner Component ---
+        const TopBanner = () => (
+            <div className="bg-brand-900 text-white py-2 px-4 text-[10px] md:text-xs text-center border-b border-white/10 relative z-50">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-center items-center gap-1 md:gap-4 opacity-80">
+                    <span className="font-bold text-brand-gold-light uppercase tracking-wider">Loan Disclaimer:</span>
+                    <p>Loans are subject to lender approval and eligibility. We are a loan facilitation service (DSA) and do not provide loans directly.</p>
+                </div>
+            </div>
+        );
+
         // --- LeadForm Component ---
         const LeadForm = () => {
             const initialFormData = {
@@ -621,6 +631,84 @@
             );
         };
 
+        // --- Eligibility & Transparency Components ---
+        const EligibilitySection = () => {
+            const docs = [
+                { i: FileText, t: "Salary Slips", d: "Last 3 months" },
+                { i: Building2, t: "Bank Statement", d: "Last 6 months" },
+                { i: ShieldCheck, t: "ITR / Form 16", d: "Last 2 years" }
+            ];
+            const conds = [
+                { t: "Minimum Salary", v: "₹25,000+" },
+                { t: "CIBIL Score", v: "750+ Preferred" },
+                { t: "Loan Amount", v: "₹1.5L - ₹50L+" }
+            ];
+            return (
+                <section id="eligibility" className="py-24 bg-white">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                            <div>
+                                <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-900 mb-6">Eligibility & Conditions</h2>
+                                <p className="text-gray-600 mb-10 leading-relaxed text-lg">We maintain transparency in our process. Ensure you meet these basic criteria to speed up your loan approval.</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                                    {conds.map((c, i) => (
+                                        <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 text-center">
+                                            <div className="text-brand-gold font-bold text-xl mb-1">{c.v}</div>
+                                            <div className="text-gray-500 text-xs uppercase tracking-wider font-semibold">{c.t}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="space-y-6">
+                                    <h4 className="font-bold text-brand-900 flex items-center gap-2"><FileCheck className="text-brand-gold" /> Required Documents</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {docs.map((d, i) => (
+                                            <div key={i} className="flex items-start gap-3 p-4 rounded-xl border border-gray-100 bg-white shadow-sm">
+                                                <d.i className="w-5 h-5 text-brand-gold shrink-0 mt-1" />
+                                                <div>
+                                                    <div className="font-bold text-sm text-brand-900">{d.t}</div>
+                                                    <div className="text-xs text-gray-500">{d.d}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-brand-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-gold/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+                                <h3 className="text-2xl font-serif font-bold mb-8 relative z-10">Financial Transparency</h3>
+                                <div className="space-y-8 relative z-10">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0"><Percent className="text-brand-gold-light" size={20} /></div>
+                                        <div>
+                                            <h4 className="font-bold mb-1">Interest Rates</h4>
+                                            <p className="text-sm text-gray-400">Depends on your credit profile, income, and lender policies. Rates start as low as 9.97%*.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0"><Coins className="text-brand-gold-light" size={20} /></div>
+                                        <div>
+                                            <h4 className="font-bold mb-1">Processing Fees</h4>
+                                            <p className="text-sm text-gray-400">Applicable as per the respective lender's terms. Usually ranges from 0.5% to 3% of loan amount.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0"><Clock className="text-brand-gold-light" size={20} /></div>
+                                        <div>
+                                            <h4 className="font-bold mb-1">Flexible Tenure</h4>
+                                            <p className="text-sm text-gray-400">Choose from 12 months to 84 months for personal loans, and up to 30 years for home loans.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-12 p-6 rounded-2xl bg-white/5 border border-white/10">
+                                    <p className="text-xs text-gray-400 italic">Note: All loan approvals are at the sole discretion of the lending partner banks/NBFCs based on their internal credit assessment.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
         // --- Testimonials Component ---
         const Testimonials = () => {
             const r = [
@@ -648,7 +736,7 @@
         };
 
         // --- Footer Component ---
-        const Footer = () => (
+        const Footer = ({ onOpenLegal }) => (
             <footer className="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
                 <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="col-span-1">
@@ -670,9 +758,9 @@
                     <div>
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Legal</h4>
                         <ul className="space-y-3 text-sm">
-                            <li className="hover:text-white cursor-pointer transition-colors">Privacy Policy</li>
-                            <li className="hover:text-white cursor-pointer transition-colors">Terms of Use</li>
-                            <li className="hover:text-white cursor-pointer transition-colors">Disclaimer</li>
+                            <li onClick={() => onOpenLegal('Privacy Policy')} className="hover:text-white cursor-pointer transition-colors">Privacy Policy</li>
+                            <li onClick={() => onOpenLegal('Terms & Conditions')} className="hover:text-white cursor-pointer transition-colors">Terms & Conditions</li>
+                            <li onClick={() => onOpenLegal('Refund Policy')} className="hover:text-white cursor-pointer transition-colors">Refund Policy</li>
                         </ul>
                     </div>
                     <div>
@@ -680,31 +768,96 @@
                         <ul className="space-y-4 text-sm">
                             <li className="flex items-center gap-3"><MapPin size={18} className="text-brand-gold" /> Dalhousie, Kolkata 700001</li>
                             <li className="flex items-center gap-3"><FileText size={18} className="text-brand-gold" /> support@jayotucapital.in</li>
+                            <li className="flex items-center gap-3"><Smartphone size={18} className="text-brand-gold" /> +91 98765 43210</li>
                         </ul>
                     </div>
                 </div>
-                <div className="max-w-7xl mx-auto px-4 border-t border-gray-800 pt-8 text-xs text-center">
-                    <p>&copy; {new Date().getFullYear()} Jayotu Capital. All Rights Reserved. | India's Trusted Loan Partner</p>
+                <div className="max-w-7xl mx-auto px-4 border-t border-gray-800 pt-8">
+                    <div className="text-[10px] md:text-xs text-center space-y-4 max-w-4xl mx-auto opacity-60">
+                        <p className="font-bold text-gray-300 uppercase tracking-widest">Full Legal Disclaimer</p>
+                        <p>This website is a loan assistance platform. We do not lend money. Loan approval is at the sole discretion of the lender and subject to verification and eligibility criteria. Jayotu Capital is a loan facilitation service (DSA) and acts as a bridge between borrowers and financial institutions. We do not charge any upfront fees from customers for loan processing.</p>
+                        <p>&copy; {new Date().getFullYear()} Jayotu Capital. All Rights Reserved. | India's Trusted Loan Partner</p>
+                    </div>
                 </div>
             </footer>
         );
 
-        // --- App Component ---
-        const App = () => (
-            <div className="min-h-screen bg-white">
-                <Navbar />
-                <Hero />
-                <TrustStrip />
-                <Features />
-                <LoanProducts />
-                <ProcessStep />
-                <Testimonials />
-                <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t p-4 z-40 shadow-2xl">
-                    <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="w-full bg-brand-gold text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-gold/30 animate-pulse">Check Loan Eligibility</button>
+        // --- Legal Modal Component ---
+        const LegalModal = ({ title, isOpen, onClose }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
+                        <div className="p-6 border-b flex justify-between items-center bg-gray-50">
+                            <h2 className="text-2xl font-serif font-bold text-brand-900">{title}</h2>
+                            <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><X /></button>
+                        </div>
+                        <div className="p-8 overflow-y-auto text-gray-600 leading-relaxed">
+                            {title === 'Privacy Policy' && (
+                                <div className="space-y-6">
+                                    <p>At Jayotu Capital, we value your privacy. This policy outlines how we collect, use, and protect your personal information.</p>
+                                    <h3 className="font-bold text-brand-900">1. Information Collection</h3>
+                                    <p>We collect information you provide through our lead forms, including name, contact details, and financial requirements.</p>
+                                    <h3 className="font-bold text-brand-900">2. Use of Information</h3>
+                                    <p>Your data is used solely to facilitate loan applications with our partner banks and NBFCs.</p>
+                                    <h3 className="font-bold text-brand-900">3. Data Security</h3>
+                                    <p>We implement industry-standard security measures to protect your data from unauthorized access.</p>
+                                </div>
+                            )}
+                            {title === 'Terms & Conditions' && (
+                                <div className="space-y-6">
+                                    <p>By using this website, you agree to the following terms and conditions.</p>
+                                    <h3 className="font-bold text-brand-900">1. Service Description</h3>
+                                    <p>Jayotu Capital is a loan facilitation platform. We are not a lender.</p>
+                                    <h3 className="font-bold text-brand-900">2. Eligibility</h3>
+                                    <p>Loan approval depends on the criteria set by our partner financial institutions.</p>
+                                    <h3 className="font-bold text-brand-900">3. Accuracy of Information</h3>
+                                    <p>Users must provide accurate and truthful information in all forms.</p>
+                                </div>
+                            )}
+                            {title === 'Refund Policy' && (
+                                <div className="space-y-6">
+                                    <h3 className="font-bold text-brand-900">Refund / Cancellation Policy</h3>
+                                    <p>Jayotu Capital does not charge any fees directly from customers for loan facilitation services. Since no payments are collected by us for the loan process, the question of refunds does not apply.</p>
+                                    <p>If any third party asks for money in the name of Jayotu Capital, please report it to us immediately at support@jayotucapital.in.</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="p-6 border-t bg-gray-50 text-center">
+                            <button onClick={onClose} className="bg-brand-900 text-white px-8 py-2 rounded-xl font-bold">Close</button>
+                        </div>
+                    </div>
                 </div>
-                <Footer />
-            </div>
-        );
+            );
+        };
+
+        // --- App Component ---
+        const App = () => {
+            const [legalModal, setLegalModal] = useState({ isOpen: false, title: '' });
+
+            return (
+                <div className="min-h-screen bg-white">
+                    <TopBanner />
+                    <Navbar />
+                    <Hero />
+                    <TrustStrip />
+                    <Features />
+                    <LoanProducts />
+                    <EligibilitySection />
+                    <ProcessStep />
+                    <Testimonials />
+                    <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t p-4 z-40 shadow-2xl">
+                        <button onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })} className="w-full bg-brand-gold text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-gold/30 animate-pulse">Check Loan Eligibility</button>
+                    </div>
+                    <Footer onOpenLegal={(title) => setLegalModal({ isOpen: true, title })} />
+                    <LegalModal 
+                        isOpen={legalModal.isOpen} 
+                        title={legalModal.title} 
+                        onClose={() => setLegalModal({ isOpen: false, title: '' })} 
+                    />
+                </div>
+            );
+        };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
