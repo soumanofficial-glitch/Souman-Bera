@@ -103,7 +103,12 @@
             const initialFormData = {
                 loanType: 'Personal Loan', employmentType: 'Salaried (Private)', incomeRange: 'Above ₹50,000',
                 cibilScore: '750+', loanAmount: '', hasOngoingLoans: 'No', totalMonthlyEmis: '',
-                hasDefaults: 'No', fullName: '', mobile: '', email: '', consent: false
+                hasDefaults: 'No', fullName: '', mobile: '', email: '', consent: false,
+                // Business Loan specific fields
+                hasITRAndTradeLicense: '',
+                turnoverAbove50L: '',
+                hasGST: '',
+                bankBalanceAbove50k: ''
             };
             const loanOptions = [
                 { type: 'Personal Loan', rate: '9.97%', icon: User, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -119,12 +124,32 @@
             const [rejectionReason, setRejectionReason] = useState('');
             const [formData, setFormData] = useState(initialFormData);
 
+            const totalSteps = formData.loanType === 'Business Loan' ? 6 : 5;
+
             const handleNext = () => {
                 // Validation for each step (Compulsory fields)
                 if (step === 1 && !formData.loanType) {
                     alert("Please select a loan type."); return;
                 }
-                if (step === 2) {
+
+                // Business Loan Qualification Step
+                if (formData.loanType === 'Business Loan' && step === 2) {
+                    if (!formData.hasITRAndTradeLicense || !formData.hasGST || !formData.bankBalanceAbove50k || !formData.turnoverAbove50L) {
+                        alert("Please answer all questions."); return;
+                    }
+                    if (formData.hasITRAndTradeLicense === 'No') {
+                        setRejectionReason("Business loans require at least 2 years of ITR and a valid Trade License.");
+                        setIsRejected(true); return;
+                    }
+                    if (formData.turnoverAbove50L === 'No') {
+                        setRejectionReason("Minimum annual turnover of ₹50 Lacs is required for Business Loan processing.");
+                        setIsRejected(true); return;
+                    }
+                }
+
+                // Standard Basic Details Step (Step 2 for others, Step 3 for Business)
+                const basicDetailsStep = formData.loanType === 'Business Loan' ? 3 : 2;
+                if (step === basicDetailsStep) {
                     if (!formData.employmentType || !formData.incomeRange || !formData.cibilScore) {
                         alert("Please fill all fields."); return;
                     }
@@ -132,12 +157,19 @@
                         setRejectionReason("Currently, we process applications for applicants with a CIBIL score of 700 or above.");
                         setIsRejected(true); return;
                     }
-                    if (formData.incomeRange === 'Below ₹25,000') {
+                    if (formData.loanType !== 'Business Loan' && formData.incomeRange === 'Below ₹25,000') {
                         setRejectionReason("We currently require a minimum monthly income of ₹25,000 to proceed with bank partners.");
                         setIsRejected(true); return;
                     }
+                    if (formData.loanType === 'Business Loan' && (formData.incomeRange === 'Below ₹25L' || formData.incomeRange === '₹25L - ₹50L')) {
+                        setRejectionReason("Minimum annual turnover of ₹50 Lacs is required for Business Loan processing.");
+                        setIsRejected(true); return;
+                    }
                 }
-                if (step === 3) {
+
+                // Loan Details Step (Step 3 for others, Step 4 for Business)
+                const loanDetailsStep = formData.loanType === 'Business Loan' ? 4 : 3;
+                if (step === loanDetailsStep) {
                     if (!formData.loanAmount || !formData.fullName) {
                         alert("Please fill all fields."); return;
                     }
@@ -146,7 +178,10 @@
                         setIsRejected(true); return;
                     }
                 }
-                if (step === 4) {
+
+                // Financial Health Step (Step 4 for others, Step 5 for Business)
+                const financialHealthStep = formData.loanType === 'Business Loan' ? 5 : 4;
+                if (step === financialHealthStep) {
                     if (!formData.hasOngoingLoans || !formData.hasDefaults) {
                         alert("Please fill all fields."); return;
                     }
@@ -155,7 +190,10 @@
                         setIsRejected(true); return;
                     }
                 }
-                if (step === 5) {
+
+                // Contact Info Step (Step 5 for others, Step 6 for Business)
+                const contactInfoStep = formData.loanType === 'Business Loan' ? 6 : 5;
+                if (step === contactInfoStep) {
                     if (!formData.mobile || !formData.email) {
                         alert("Please fill all fields."); return;
                     }
@@ -164,7 +202,7 @@
                     }
                 }
 
-                if (step < 5) setStep(step + 1); else handleSubmit();
+                if (step < totalSteps) setStep(step + 1); else handleSubmit();
             };
 
             const handleSubmit = async () => {
@@ -238,18 +276,24 @@
                 <div id="lead-form" className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col min-h-[500px]">
                     <div className="bg-brand-950 p-4 text-white flex justify-between items-center">
                         <div className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-brand-gold" /><span className="text-sm font-semibold">Eligibility Check</span></div>
-                        <span className="text-xs text-gray-400">Step {step} of 5</span>
+                        <span className="text-xs text-gray-400">Step {step} of {totalSteps}</span>
                     </div>
                     <div className="p-6 flex-1">
                         <div className="w-full bg-gray-100 h-2 rounded-full mb-8 overflow-hidden">
-                            <div className="bg-brand-gold h-full transition-all duration-500" style={{ width: `${(step / 5) * 100}%` }}></div>
+                            <div className="bg-brand-gold h-full transition-all duration-500" style={{ width: `${(step / totalSteps) * 100}%` }}></div>
                         </div>
                         {step === 1 && (
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Select Loan Requirement</h3>
                                 <div className="grid grid-cols-1 gap-3">
                                     {loanOptions.map(o => (
-                                        <button key={o.type} onClick={() => { updateField('loanType', o.type); setStep(2); }} className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all hover:border-brand-gold/50 ${formData.loanType === o.type ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-100 bg-white'}`}>
+                                        <button key={o.type} onClick={() => { 
+                                            updateField('loanType', o.type); 
+                                            if (o.type === 'Business Loan') {
+                                                updateField('employmentType', 'Self-Employed Business');
+                                            }
+                                            setStep(2); 
+                                        }} className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all hover:border-brand-gold/50 ${formData.loanType === o.type ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-100 bg-white'}`}>
                                             <div className="flex items-center gap-4">
                                                 <div className={`p-3 rounded-full ${o.bg} ${o.color}`}><o.icon size={24} /></div>
                                                 <div className="text-left"><span className="block font-bold text-lg">{o.type}</span><span className="text-xs font-semibold text-gray-500">Starting @ <span className="text-brand-gold">{o.rate}</span></span></div>
@@ -260,17 +304,66 @@
                                 </div>
                             </div>
                         )}
-                        {step === 2 && (
+                        {step === 2 && formData.loanType === 'Business Loan' && (
+                            <div className="animate-fade-in-up">
+                                <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Business Qualification</h3>
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-bold mb-3">Do you have 2 years ITR and Trade License?</label>
+                                        <div className="flex gap-4">
+                                            {['Yes', 'No'].map(o => (
+                                                <button key={o} onClick={() => updateField('hasITRAndTradeLicense', o)} className={`flex-1 py-3 rounded-lg border font-semibold transition-all ${formData.hasITRAndTradeLicense === o ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200'}`}>{o}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-3">Do you have a GST registration?</label>
+                                        <div className="flex gap-4">
+                                            {['Yes', 'No'].map(o => (
+                                                <button key={o} onClick={() => updateField('hasGST', o)} className={`flex-1 py-3 rounded-lg border font-semibold transition-all ${formData.hasGST === o ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200'}`}>{o}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-3">Is your annual turnover greater than ₹50 Lacs?</label>
+                                        <div className="flex gap-4">
+                                            {['Yes', 'No'].map(o => (
+                                                <button key={o} onClick={() => updateField('turnoverAbove50L', o)} className={`flex-1 py-3 rounded-lg border font-semibold transition-all ${formData.turnoverAbove50L === o ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200'}`}>{o}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-3">Is your average bank balance above ₹50,000?</label>
+                                        <div className="flex gap-4">
+                                            {['Yes', 'No'].map(o => (
+                                                <button key={o} onClick={() => updateField('bankBalanceAbove50k', o)} className={`flex-1 py-3 rounded-lg border font-semibold transition-all ${formData.bankBalanceAbove50k === o ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200'}`}>{o}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {step === (formData.loanType === 'Business Loan' ? 3 : 2) && (
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Basic Details</h3>
                                 <div className="space-y-6">
                                     <div><label className="block text-sm font-bold mb-2">Employment</label><select value={formData.employmentType} onChange={e => updateField('employmentType', e.target.value)} className="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-brand-gold outline-none"><option>Salaried (Private)</option><option>Salaried (Govt)</option><option>Self-Employed Business</option></select></div>
-                                    <div><label className="block text-sm font-bold mb-2">Monthly Income</label><div className="grid grid-cols-2 gap-3">{['Above ₹50,000', '₹35,000 - ₹50,000', '₹25,000 - ₹35,000', 'Below ₹25,000'].map(r => <button key={r} onClick={() => updateField('incomeRange', r)} className={`py-2 px-3 text-sm rounded-lg border transition-all ${formData.incomeRange === r ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-900'}`}>{r}</button>)}</div></div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-2">{formData.loanType === 'Business Loan' ? 'Annual Turnover' : 'Monthly Income'}</label>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {(formData.loanType === 'Business Loan' 
+                                                ? ['Above ₹1 Cr', '₹50L - ₹1 Cr', '₹25L - ₹50L', 'Below ₹25L']
+                                                : ['Above ₹50,000', '₹35,000 - ₹50,000', '₹25,000 - ₹35,000', 'Below ₹25,000']
+                                            ).map(r => (
+                                                <button key={r} onClick={() => updateField('incomeRange', r)} className={`py-2 px-3 text-sm rounded-lg border transition-all ${formData.incomeRange === r ? 'bg-brand-900 text-white border-brand-900' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-900'}`}>{r}</button>
+                                            ))}
+                                        </div>
+                                    </div>
                                     <div><label className="block text-sm font-bold mb-2">CIBIL Score</label><div className="grid grid-cols-4 gap-2">{['750+', '700-749', '650-699', 'Below 650'].map(s => <button key={s} onClick={() => updateField('cibilScore', s)} className={`py-2 px-1 text-xs rounded-lg border transition-all ${formData.cibilScore === s ? 'bg-brand-gold text-white border-brand-gold' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-gold'}`}>{s}</button>)}</div></div>
                                 </div>
                             </div>
                         )}
-                        {step === 3 && (
+                        {step === (formData.loanType === 'Business Loan' ? 4 : 3) && (
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">{formData.loanType} Details</h3>
                                 <div className="space-y-4">
@@ -279,7 +372,7 @@
                                 </div>
                             </div>
                         )}
-                        {step === 4 && (
+                        {step === (formData.loanType === 'Business Loan' ? 5 : 4) && (
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Financial Health</h3>
                                 <div className="space-y-6">
@@ -288,7 +381,7 @@
                                 </div>
                             </div>
                         )}
-                        {step === 5 && (
+                        {step === (formData.loanType === 'Business Loan' ? 6 : 5) && (
                             <div className="animate-fade-in-up">
                                 <h3 className="text-2xl font-serif font-bold text-brand-900 mb-6">Contact Info</h3>
                                 <div className="space-y-4">
@@ -301,7 +394,7 @@
                     </div>
                     <div className="p-6 bg-gray-50 border-t flex justify-between items-center">
                         {step > 1 ? <button onClick={() => setStep(step - 1)} className="text-gray-500 font-semibold flex items-center gap-1 hover:text-brand-900 transition-colors"><ChevronLeft size={18} /> Back</button> : <div></div>}
-                        <button onClick={handleNext} disabled={isSubmitting || (step === 5 && !formData.consent)} className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-95 ${isSubmitting || (step === 5 && !formData.consent) ? 'bg-gray-400 cursor-not-allowed' : 'bg-brand-900 hover:bg-brand-800 hover:shadow-brand-900/20'}`}>{isSubmitting ? 'Processing...' : step === 5 ? 'Check Offers' : 'Next'}</button>
+                        <button onClick={handleNext} disabled={isSubmitting || (step === totalSteps && !formData.consent)} className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-95 ${isSubmitting || (step === totalSteps && !formData.consent) ? 'bg-gray-400 cursor-not-allowed' : 'bg-brand-900 hover:bg-brand-800 hover:shadow-brand-900/20'}`}>{isSubmitting ? 'Processing...' : step === totalSteps ? 'Check Offers' : 'Next'}</button>
                     </div>
                 </div>
             );
